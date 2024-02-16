@@ -1,0 +1,406 @@
+// import 'package:admin_ticead/controller/map_controller/gmap_controller.dart';
+// import 'package:flutter/material.dart';
+// import 'package:get/get.dart';
+// import 'package:get/get_core/src/get_main.dart';
+// import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+// class GMap extends StatelessWidget {
+//   const GMap({super.key});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final cntrl = Get.put(GmapController());
+//     return Scaffold(
+//       body: Column(
+//         children: [
+//           Expanded(
+//             child: ListView(
+//               children: [
+//                 GoogleMap(
+//                   initialCameraPosition:
+//                       CameraPosition(target: cntrl.pgoogleplex, zoom: 14),
+//                   markers: {
+//                     Marker(
+//                         markerId: const MarkerId("_currentLocation"),
+//                         icon: BitmapDescriptor.defaultMarker,
+//                         position: cntrl.pgoogleplex),
+//                     Marker(
+//                         markerId: const MarkerId("_SourceLocation"),
+//                         icon: BitmapDescriptor.defaultMarker,
+//                         position: cntrl.pappleplex),
+//                   },
+//                 ),
+//                 Container(
+//                   color: Colors.amber,
+//                   child: Text(cntrl.observe.toString()),
+//                   height: 20,
+//                 ),
+//               ],
+//             ),
+//           ),
+//           Row(
+//             mainAxisAlignment: MainAxisAlignment.center,
+//             children: [
+//               ElevatedButton(
+//                 onPressed: () {
+//                   // Add your button logic here
+//                 },
+//                 child: Text('Button 1'),
+//               ),
+//               SizedBox(width: 30,),
+
+//                 ElevatedButton(
+//             onPressed: () {
+//               // Add your button logic here
+//             },
+//             child: Text('Button 2'),
+//           ),
+//             ],
+//           ),
+        
+//         ],
+//       ),
+//     );
+//   }
+// }
+
+
+import 'dart:developer';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:share_sub_admin/application/main_property_bloc/main_property_bloc.dart';
+import 'package:share_sub_admin/application/main_property_bloc/main_property_event.dart';
+import 'package:share_sub_admin/application/main_property_bloc/main_property_state.dart';
+
+class LocationPicking extends StatelessWidget {
+  var initialCameraPosition =
+      const CameraPosition(target: LatLng(12.44, 20.445), zoom: 14);
+  GoogleMapController? _controller;
+  
+
+  LocationPicking({super.key,});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<MainPropertyBloc, MainPropertyState>(
+      builder: (context, state) {
+        log('${context.watch<MainPropertyBloc>().latLng}');
+        LatLng? position = context.watch<MainPropertyBloc>().latLng;
+        if (position != null && _controller != null) {
+          log('2 oke');
+          BlocProvider.of<MainPropertyBloc>(context).marker.clear();
+          BlocProvider.of<MainPropertyBloc>(context).marker.add(
+                Marker(
+                  markerId: const MarkerId('current position'),
+                  position: LatLng(position.latitude, position.longitude),
+                ),
+              );
+          _controller!.animateCamera(
+            CameraUpdate.newCameraPosition(
+              CameraPosition(
+                  target: LatLng(position.latitude, position.longitude),
+                  zoom: 14),
+            ),
+          );
+        }
+        return Scaffold(
+          appBar: AppBar(),
+          body: Column(
+            children: [
+              Expanded(
+                child: GoogleMap(
+                  onTap: (argument) {
+                    BlocProvider.of<MainPropertyBloc>(context)
+                        .add(OnClickOtherLocationEvent(latLng: argument));
+                  },
+                  initialCameraPosition:
+                      BlocProvider.of<MainPropertyBloc>(context).latLng != null
+                          ? CameraPosition(
+                              target: LatLng(
+                                  context
+                                      .watch<MainPropertyBloc>()
+                                      .latLng!
+                                      .latitude,
+                                  context
+                                      .watch<MainPropertyBloc>()
+                                      .latLng!
+                                      .longitude))
+                          : initialCameraPosition,
+                  mapType: MapType.normal,
+                  onMapCreated: (controller) {
+                    log('on map create');
+                    _controller = controller;
+                    if (position != null) {
+                      _controller!.animateCamera(
+                        CameraUpdate.newCameraPosition(
+                          CameraPosition(
+                              target:
+                                  LatLng(position.latitude, position.longitude),
+                              zoom: 14),
+                        ),
+                      );
+                      BlocProvider.of<MainPropertyBloc>(context).marker.clear();
+                      BlocProvider.of<MainPropertyBloc>(context).marker.add(
+                            Marker(
+                              markerId: const MarkerId('current position'),
+                              position:
+                                  LatLng(position.latitude, position.longitude),
+                            ),
+                          );
+                    }
+                  },
+                  markers: context.watch<MainPropertyBloc>().marker,
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  ElevatedButton(
+                    onPressed: () async {
+                      BlocProvider.of<MainPropertyBloc>(context)
+                          .add(OnCurrentLocationClickEvent());
+                    },
+                    child:
+                        state is MainPropertyCurrentLocationPickingLoadingState
+                            ? const CircularProgressIndicator()
+                            : const Text('Current Location'),
+                  ),
+                  ElevatedButton(
+                      autofocus: false,
+                      onPressed: state is MainPropertyCurrentLocationPickedState
+                          ? () {
+                              Navigator.of(context).pop();
+                            }
+                          : null,
+                      child: const Text('Submit'))
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+      listener: (context, state) {
+        if (state is MainPropertylocationFixedState) {
+          Navigator.of(context).pop();
+        }
+        // } else if (state is MainPropertyCurrentLocationPickedState) {
+        //   LatLng? position = context.watch<MainPropertyBloc>().latLng;
+        //   if (position != null) {
+        //     _controller.animateCamera(
+        //       CameraUpdate.newCameraPosition(
+        //         CameraPosition(
+        //             target: LatLng(position.latitude, position.longitude),
+        //             zoom: 14),
+        //       ),
+        //     );
+        //   }
+        // }
+      },
+    );
+  }
+}
+
+
+
+
+
+
+import 'dart:developer';
+
+import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
+
+class GmapController extends GetxController {
+  // ObsLatLng? latLng;
+  LatLng? latLng;
+  RxSet<Marker> markers = RxSet<Marker>();
+  Rx<LatLng> pgoogleplex = const LatLng(37.4233, -122.0848).obs;
+  Rx<LatLng> pappleplex = const LatLng(37.4233, -122.0848).obs;
+//  Rx<LatLng> currentP= LatLng(0, 0).obs;
+  Rx<LatLng> currentP = LatLng(0, 0).obs;
+  RxString observe = ''.obs;
+
+  RxBool isloading = false.obs;
+  Location locationController = Location();
+
+  var initialCameraPosition =
+      const CameraPosition(target: LatLng(12.44, 20.445), zoom: 14);
+  GoogleMapController? mapcontroller;
+
+// @override
+// init(){
+// getLocationUpdates();
+// }
+
+  Future<Position> getLocationUpdates() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      log('Location service is disabled');
+      return Future.error('Location service is disabled');
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      await Geolocator.requestPermission();
+      permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        log('Location permission is denied');
+        return Future.error('Location permission is denied');
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      log('Location permission denied permenently');
+      return Future.error('Location permission denied permenently');
+    }
+    var currentPostion = await Geolocator.getCurrentPosition();
+    return currentPostion;
+  }
+
+  gfun(position) {
+    log('markers in gmapcontroller ${markers.toString()}');
+    markers.clear();
+    markers.add(Marker(
+        markerId: MarkerId('current Location'),
+        position: LatLng(position.latitude, position.longitude)));
+    mapcontroller?.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(
+            target: LatLng(position.latitude, position.longitude), zoom: 14),
+      ),
+    );
+  }
+
+  onclickedlcoation() async {
+//  log("paleekilla");
+//     Position? position = await getLocationUpdates();
+//     latLng = LatLng(position.latitude, position.longitude);
+//     log("clicked and postions ${position.toString()}");
+    
+//     //  ObsLatLng(
+//     //     initialLatitude: position.latitude,
+//     //     initialLongitude: position.longitude);
+
+      try {
+    Position? position = await getLocationUpdates();
+    if (position != null) {
+      latLng = LatLng(position.latitude, position.longitude);
+      gfun(position); // Update markers here
+    }
+  } catch (e) {
+    log('Error getting location: $e');
+  }
+  }
+}
+
+class ObsLatLng {
+  RxDouble? latitude;
+  RxDouble? longitude;
+
+  ObsLatLng({double? initialLatitude, double? initialLongitude}) {
+    latitude = initialLatitude?.obs;
+    longitude = initialLongitude?.obs;
+  }
+}
+
+
+
+
+
+================================
+ui
+--------------------------------
+
+import 'dart:developer';
+
+
+import 'package:admin_ticead/controller/map_controller/gmap_controller.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+class GMap extends StatelessWidget {
+  const GMap({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final cntrl = Get.put(GmapController());
+    return Scaffold(body: GetX<GmapController>(builder: (controller) {
+      LatLng? position = controller.latLng;
+      if (position != null && controller.mapcontroller != null) {
+        controller.gfun(position);
+      }
+
+      return
+
+  
+          Column(
+        children: [
+          SizedBox(
+            height: MediaQuery.of(context).size.height / 1.12,
+            child: GoogleMap(
+                  onTap: (argument) {
+                 controller.onclickedlcoation();
+                  },
+                  initialCameraPosition:
+                     controller.latLng != null
+                          ? CameraPosition(
+                              target: LatLng(
+                                  controller
+                                     
+                                      .latLng!
+                                      .latitude,
+                              controller
+                                     
+                                      .latLng!
+                                      .longitude))
+                          : controller.initialCameraPosition,
+                  mapType: MapType.normal,
+                  onMapCreated: (controllerofmap) {
+                    log('on map create');
+                   controller.mapcontroller = controllerofmap;
+                    if (position != null) {
+                       controller.mapcontroller!.animateCamera(
+                        CameraUpdate.newCameraPosition(
+                          CameraPosition(
+                              target:
+                                  LatLng(position.latitude, position.longitude),
+                              zoom: 14),
+                        ),
+                      );
+                     controller.markers.clear();
+                      controller.markers.add(
+                            Marker(
+                              markerId: const MarkerId('current position'),
+                              position:
+                                  LatLng(position.latitude, position.longitude),
+                            ),
+                          );
+                    }
+                  },
+                  markers: controller.markers,
+                ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              ElevatedButton(
+                onPressed: () {},
+                child: const Text('Button 1'),
+              ),
+              ElevatedButton(
+                onPressed: () {},
+                child: const Text('Button 2'),
+              ),
+            ],
+          ),
+        ],
+      );
+    }));
+  }
+}

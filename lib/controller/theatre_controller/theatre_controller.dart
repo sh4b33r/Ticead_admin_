@@ -1,8 +1,5 @@
 import 'dart:developer';
-
-import 'package:admin_ticead/model/theatre_model/theatre_model.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -11,9 +8,16 @@ class TheatreController extends GetxController {
   RxBool executive = false.obs;
   RxBool premium = false.obs;
   RxBool reclined = false.obs;
-  RxList image = [].obs;
-//  RxList<XFile> imageFileList = [].obs;
+  RxList<XFile> image = <XFile>[].obs;
+  List<String> names = [];
+  TextEditingController cntrlName = TextEditingController();
+  TextEditingController cntrlDesc = TextEditingController();
+  TextEditingController? cntrlNormal = TextEditingController();
+  TextEditingController? cntrlExecutive = TextEditingController();
+  TextEditingController? cntrlPremium = TextEditingController();
+  TextEditingController? cntrlreclined = TextEditingController();
 
+//  RxList<XFile> imageFileList = [].obs;
 
 // =================================
 // for Check Box
@@ -25,22 +29,28 @@ class TheatreController extends GetxController {
     seatType.value = !seatType.value;
   }
 
-  
-
-
 // =================================
 // List of Images pIcking
 // ---------------------------------
 
   Future<void> pickImage() async {
     final selctimgsFile = await ImagePicker().pickMultiImage();
-    if (selctimgsFile.isNotEmpty) {
- 
 
-      image.addAll(selctimgsFile);
-       update(); 
+    if (selctimgsFile.isNotEmpty) {
+      for (var slctdsingle in selctimgsFile) {
+        String toconvert = slctdsingle.name;
+         log(names.toString());
+
+        if (!names.contains(toconvert)) {
+          image.add(slctdsingle);          update();
+          names.add(toconvert);
+        }
+      }
+    } else {
+      log('no');
     }
     // image.value = imgFile.path;
+     log(names.toString());
     log("Image List Length:${image.length}");
     // update();
   }
@@ -50,14 +60,35 @@ class TheatreController extends GetxController {
 // ---------------------------------
 
   Future<void> clearImage(image) async {
-   image.clear();
+    image.clear();
+    update();
   }
 
+  Future<void> removeImage(int index) async {
+//  log(imageofxfile.path);
+//     int nameindex = image.indexOf(imageofxfile.name);
+//     log('nameindex   $nameindex');
+//     int index = image.indexOf(imageofxfile);
+//     log('nameindex   $index');
 
-  Future<void> removeImage(index) async {
     image.removeAt(index);
+    names.removeAt(index);
+    update();
   }
 
 
 
+// =================================
+// clearing Images that are pIcked
+// ---------------------------------
+  clearAllThings() {
+    cntrlName.clear();
+    cntrlDesc.clear();
+    cntrlNormal?.clear();
+    cntrlExecutive?.clear();
+    cntrlPremium?.clear();
+    cntrlreclined?.clear();
+    image.clear();
+    update();
+  }
 }
