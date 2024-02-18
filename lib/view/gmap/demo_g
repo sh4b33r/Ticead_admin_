@@ -404,3 +404,50 @@ class GMap extends StatelessWidget {
     }));
   }
 }
+
+
+
+
+==============================
+// class DateWidget extends StatelessWidget {
+//   const DateWidget ({super.key});
+
+//   @override
+//   Widget build(BuildContext context) {
+    
+//     return Container(
+//       color: Colors.black,
+//       margin: const EdgeInsets.only(top: 10),
+//       child: GetX<TImeController>(
+//         builder: (controller) {
+//           return DatePicker(
+          
+//             daysCount: 7,
+//           DateTime.now(),
+          
+//           height: 100,
+//           width: 80,
+//           controller:controller.datecontroller.value ,
+          
+//           initialSelectedDate: DateTime.now(),
+//           selectionColor: MycolorTheme.custwhite,
+          
+//           selectedTextColor: Colors.red,
+//           deactivatedColor: Color.fromARGB(255, 235, 233, 233),
+//           dateTextStyle: TextStyle(color: Colors.amber)
+//           ,dayTextStyle: TextStyle(color: Colors.amber),
+//           monthTextStyle: TextStyle(color:Colors.amber),
+           
+//            onDateChange: (selectedDate) {
+            
+//                    controller.selectedDAte.value=selectedDate;
+//                   //  controller.check();
+//            },
+          
+          
+//           );
+//         }
+//       ),
+//     );
+//   }
+// }

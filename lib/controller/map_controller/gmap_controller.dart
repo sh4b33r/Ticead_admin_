@@ -3,10 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart';
 
 class GMapController extends GetxController {
-  RxSet<Marker> markers = Set<Marker> ().obs;
+  RxSet<Marker> markers = <Marker> {}.obs;
   Rx<LatLng> latLng = const LatLng(11.258753, 75.780411).obs;
   GoogleMapController? mapController;
 

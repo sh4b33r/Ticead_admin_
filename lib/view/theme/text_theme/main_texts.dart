@@ -4,7 +4,7 @@ class MytextTheme {
   
   static TextStyle commomText = const TextStyle(
       fontFamily: 'Montserrat-Medium',
-      color: Color.fromARGB(255, 253, 253, 253),
+      color: Color.fromARGB(255, 0, 0, 0),
       fontSize: 12,
       fontWeight: FontWeight.w100,
       letterSpacing: 0.9);
@@ -33,11 +33,27 @@ class MytextTheme {
 
   static TextStyle descriptionText = const TextStyle(
       fontFamily: 'Montserrat-Medium',
-      color: Color.fromARGB(255, 255, 255, 255),
-      fontSize: 15,
+      color: Color.fromARGB(255, 0, 0, 0),
+      fontSize: 16,
       fontWeight: FontWeight.w100,
       letterSpacing: 0.9);
 
+
+
+  static TextStyle Medium14Text = const TextStyle(
+      fontFamily: 'Montserrat-Medium',
+      color: Color.fromARGB(255, 18, 18, 18),
+      fontSize: 14,
+      fontWeight: FontWeight.w100,
+      letterSpacing: 0.9);
+
+ 
+  static TextStyle Medium15Text = const TextStyle(
+      fontFamily: 'Montserrat-Medium',
+      color: Color.fromARGB(255, 18, 18, 18),
+      fontSize: 15,
+      fontWeight: FontWeight.w100,
+      letterSpacing: 0.9);
 
 
 

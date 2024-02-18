@@ -10,7 +10,7 @@ import 'package:get/get.dart';
 class LoginController extends GetxController {
   
   String? id;
- 
+  
 
   tologin() async {
     final Map<String,String?>  email = await signInwithgoogle();
@@ -39,7 +39,7 @@ class LoginController extends GetxController {
   sharedtocntrl()async{
   //  id=await SharedPref.sharedprefget();
      
-      id = await SharedPref.sharedprefget();
+      id = SharedPref.sharedprefget();
       log('Stored ID: $id');
    
   }

@@ -1,16 +1,17 @@
+import 'package:admin_ticead/controller/movie_controller/movie_controller.dart';
 import 'package:admin_ticead/controller/splash_controller/splash_controller.dart';
+import 'package:admin_ticead/model/shared_pref/shared_funcitons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
 class SplashScreen extends StatelessWidget {
-  
   const SplashScreen({super.key});
-  
-  
+
   @override
   Widget build(BuildContext context) {
-     Get.put(SplashController());
+    Get.put(SplashController());
+    sharedisntancefucniton();
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,

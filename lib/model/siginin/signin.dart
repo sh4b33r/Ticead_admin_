@@ -40,29 +40,28 @@ signInwithgoogle() async {
 }
 
 // ==================================
-// for firbase storign sigin in creds
+// for firbaseFirestore storing sigin in Creds
 // ----------------------------------
+
 Future<String> addUser(String? email, String? name) async {
-  
-    final fdata = await FirebaseFirestore.instance
-        .collection('theatre_admin')
-        .where('email', isEqualTo: email)
-        .get();
+  final fdata = await FirebaseFirestore.instance
+      .collection('theatre_admin')
+      .where('email', isEqualTo: email)
+      .get();
 
+  log(" .................................${fdata.docs.isEmpty}.......................................");
 
-    log(" .................................${fdata.docs.isEmpty}.......................................");
+  if (fdata.docs.isEmpty) {
+    final id =
+        await FirebaseFirestore.instance.collection('theatre_admin').add({
+      'email': email,
+      'name': name,
+      'timestamp': FieldValue.serverTimestamp(),
+    });
 
-    if (fdata.docs.isEmpty) {
-      final id =
-          await FirebaseFirestore.instance.collection('theatre_admin').add({
-        'email': email,
-        'name': name,
-        'timestamp': FieldValue.serverTimestamp(),
-      });
-    
-      return id.id;
-    } else {
-      String existingUserId = fdata.docs.first.id;
-      return existingUserId;
-    }
-  } 
+    return id.id;
+  } else {
+    String existingUserId = fdata.docs.first.id;
+    return existingUserId;
+  }
+}

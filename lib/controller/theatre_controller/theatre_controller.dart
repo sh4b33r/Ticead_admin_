@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 class TheatreController extends GetxController {
   RxBool normal = true.obs;
   RxBool executive = false.obs;
+
   RxBool premium = false.obs;
   RxBool reclined = false.obs;
   RxList<XFile> image = <XFile>[].obs;

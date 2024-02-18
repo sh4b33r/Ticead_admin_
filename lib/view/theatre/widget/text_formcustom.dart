@@ -88,6 +88,7 @@ class TexTFormfields extends StatelessWidget {
       ),
 
 // tickboxes in flutter theatre add screen  ----> Normal
+
       const SeatSelection(),
 
       const SizedBox(
@@ -143,7 +144,7 @@ class TexTFormfields extends StatelessWidget {
                   backgroundColor: Colors.transparent,
                   shadowColor: Colors.transparent),
               onPressed: () async {
-                final id=await SharedPref.sharedprefget();
+                final id=SharedPref.sharedprefget();
                 final urls = await FirebaseService.imgsendingtoFStorage(
                     controllerobj.image);
                 log('all urls  textformcutom_141>>>>>> $urls');

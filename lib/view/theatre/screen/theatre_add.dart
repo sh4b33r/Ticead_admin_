@@ -1,7 +1,7 @@
 import 'package:admin_ticead/controller/theatre_controller/theatre_controller.dart';
 import 'package:admin_ticead/view/theatre/widget/text_formcustom.dart';
 import 'package:admin_ticead/view/theatre/widget/texts_field.dart';
-import 'package:admin_ticead/view/theme/color_theme/main_colors.dart';
+import 'package:admin_ticead/view/theme/color_n_style/main_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
