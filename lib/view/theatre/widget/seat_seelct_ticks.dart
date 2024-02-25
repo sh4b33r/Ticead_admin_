@@ -26,16 +26,16 @@ class SeatSelection extends StatelessWidget {
                         onChanged: (_) {
                           controller.forCheckBox(controller.normal);
                         },
-
+        
                         // activeColor: Colors.green,
                       ),
                       Text(
-                        'Normal',
+                        'Normal Price',
                         style: MytextTheme.textformsText,
                       )
                     ],
                   ),
-
+        
                   // tickboxes in flutter theatre add screen  ----> Executive
                   Row(
                     children: [
@@ -45,11 +45,11 @@ class SeatSelection extends StatelessWidget {
                         onChanged: (_) {
                           controller.forCheckBox(controller.executive);
                         },
-
+        
                         // activeColor: Colors.green,
                       ),
                       Text(
-                        'Executive',
+                        'Executive Price',
                         style: MytextTheme.textformsText,
                       )
                     ],
@@ -57,7 +57,7 @@ class SeatSelection extends StatelessWidget {
                 ],
               ),
             ),
-
+        
             Padding(
               padding: const EdgeInsets.only(left: 10, right: 19),
               child: Row(
@@ -72,11 +72,11 @@ class SeatSelection extends StatelessWidget {
                         onChanged: (_) {
                           controller.forCheckBox(controller.premium);
                         },
-
+        
                         // activeColor: Colors.green,
                       ),
                       Text(
-                        'Premium',
+                        'Premium Price',
                         style: MytextTheme.textformsText,
                       )
                     ],
@@ -89,11 +89,11 @@ class SeatSelection extends StatelessWidget {
                         onChanged: (_) {
                           controller.forCheckBox(controller.reclined);
                         },
-
+        
                         // activeColor: Colors.green,
                       ),
                       Text(
-                        'Recliner',
+                        'Recliner Price',
                         style: MytextTheme.textformsText,
                       )
                     ],
@@ -101,25 +101,25 @@ class SeatSelection extends StatelessWidget {
                 ],
               ),
             ),
-
+        
             // Custom price TEXTFIELD for NORMAL
-
+        
             controller.normal.value == true
                 ? Padding(
                     padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
                     child: CustomFormPriceField(hintText: 'Normal'))
                 : const SizedBox(),
-
+        
             // Custom price TEXTFIELD for EXECUTIVE
-
+        
             controller.executive.value == true
                 ? Padding(
                     padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
                     child: CustomFormPriceField(hintText: 'Executive'))
                 : const SizedBox(),
-
+        
             // Custom price TEXTFIELD for PREMIUM
-
+        
             controller.premium.value == true
                 ? Padding(
                     padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
@@ -127,9 +127,9 @@ class SeatSelection extends StatelessWidget {
                       hintText: 'Premium',
                     ))
                 : const SizedBox(),
-
+        
             // Custom price TEXTFIELD for RECLINED
-
+        
             controller.reclined.value == true
                 ? Padding(
                     padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),

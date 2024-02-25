@@ -6,12 +6,21 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class TheatreaddScreen extends StatelessWidget {
-  TheatreaddScreen({super.key});
+  bool isEditing; 
+  TheatreaddScreen({super.key,this.isEditing=false});
+ 
   final controller = Get.put(TheatreController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(backgroundColor: Colors.transparent),
+      appBar: AppBar(
+        
+        leading: IconButton(onPressed: (){
+
+          Get.back();
+        }, icon: const Icon(Icons.arrow_back,color: Colors.white,)),
+
+        backgroundColor: const Color.fromARGB(235, 0, 0, 0)),
       backgroundColor: MycolorTheme.custwhite,
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -31,12 +40,18 @@ class TheatreaddScreen extends StatelessWidget {
               ],
             ),
             child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  textfields(controller.cntrlName, controller.cntrlDesc),
-                  // TextsFieldsCustom(),
-                  TexTFormfields(),
-                ],
+              child: Form(
+                key: controller.formKey,
+                child: Column(
+                  children: [
+                   isEditing?textfields(controller.cntrlName, controller.cntrlDesc,isEditing: isEditing):
+                    textfields(controller.cntrlName, controller.cntrlDesc,),
+                    // TextsFieldsCustom(),
+                    //  isEditing?
+                     TexTFormfields(isEditing: isEditing,)
+                    // TexTFormfields(),
+                  ],
+                ),
               ),
             ),
           ),
@@ -45,13 +60,13 @@ class TheatreaddScreen extends StatelessWidget {
               top: 140,
               child: CircleAvatar(
                   backgroundColor: Color.fromARGB(255, 237, 252, 222))),
-          Image.asset(
-            'asset/image/Vector_10.png',
-          ),
+          // Image.asset(
+          //   'asset/image/Vector_10.png',
+          // ),
           Positioned(
               right: 0,
               child: Image.asset(
-                'asset/image/Vector_10.png',
+                'asset/image/sibgezigaga.png',
               )),
           const Positioned(
               left: -21,

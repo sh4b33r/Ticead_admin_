@@ -34,8 +34,9 @@ class TImeController extends GetxController {
     }
     log(selectedTime.toString());
   }
-
-// sending slected time to firebase firestore add update all in one
+// =================================================-=================================
+// sending slected time to firebase firestore add update all in one  and trying to send movie details also
+// -----------------------------------------------------------------------------------
 
   Future<void> sendDateTimedata(
       {bool update = false,
@@ -49,23 +50,31 @@ class TImeController extends GetxController {
           .get();
 
       log(fdata.docs.isEmpty.toString());
+      
 
       if (fdata.docs.isEmpty) {
+// ------------------------------------------------------------------
+//  time Add in fiebasefriestore that has nothing on the specific date
+// ------------------------------------------------------------------
         final id = await FirebaseFirestore.instance.collection('shows').add({
           'Date': selectedDAte.value,
           'Time': [selectedTime.value.toString().substring(10, 15)],
           // 'Time': '${selectedTime.value.hour.hours}:${selectedTime.value.minute.minutes}',
-          'id': sharedInstance.getString(SCons.loginKey),
+          'id': SharedPref().sharedInstance.toString(),
           'timestamp': FieldValue.serverTimestamp(),
         });
 
-        log('DateTIme Added with ${id.id}');
-      } else {
-        log(fdata.docs.first['Time'].toString());
+      //   log('DateTIme Added with ${id.id}');
+      // } else {
+      //   log(fdata.docs.first['Time'].toString());
         // log(temp.toString());
-
+      // fdata.docs.first.reference.f
+// --------------------------------------------------
+//  time update in timepicker sending to Firestoere
+// ---------------------------------------------------
+       
         if (update) {
-          //  Set<String> tmset = Set<String>.from(fdata.docs.first['Time']);
+           Set<String> tmset = Set<String>.from(fdata.docs.first['Time']);
           List<dynamic> temp = List<String>.from(fdata.docs.first['Time']);
           temp.add(selectedTime.value.toString().substring(10, 15));
 
@@ -79,7 +88,9 @@ class TImeController extends GetxController {
             temp.insert(
                 indexToUpdate, selectedTime.value.toString().substring(10, 15));
             log('${temp} after udpatedd');
-            // log('${tmset} after udpaetd');
+            log('${tmset} after udpaetd');
+           
+
             log('true updated time and swapped old time');
 
             //    await FirebaseFirestore.instance
@@ -97,32 +108,44 @@ class TImeController extends GetxController {
             ));
             log('No Time found');
           }
-        } else {
-             if (movie) {
-          if (movie && movieDetails != null) {
-            await fdata.docs.first.reference.update({
-              'movies': {
-                currentEditingTIme.value: {'title': movieDetails.title ,
-                'overview': movieDetails.overview,
-                'language': movieDetails.language ,'backdroppath': movieDetails.backdroppath,'originaltitle':movieDetails.originaltitle,'voterating': movieDetails.voterating,'posterpath': movieDetails.posterpath}
-                
-                  // MovieModel(title: movieDetails.title, language: movieDetails.language, backdroppath: movieDetails.backdroppath, originaltitle:movieDetails.originaltitle, overview: movieDetails.overview, voterating: movieDetails.voterating, posterpath: movieDetails.posterpath)
-              },
-            });
-          }
-          return;
         }
+        } else {
+// --------------------------------------------------
+//  If Movie is Submitting  after selcted movie
+// ---------------------------------------------------
+          if (movie) {
+            List<Map<String, dynamic>> temparray =
+                List<Map<String, dynamic>>.from(fdata.docs.first['movies']);
+            if (movie && movieDetails != null) {
+              var newMovie = {
+              
+                // 'title': movieDetails.title,
+                // 'overview': movieDetails.overview,
+                // 'language': movieDetails.language,
+                // 'backdroppath': movieDetails.backdroppath,
+                // 'originaltitle': movieDetails.originaltitle,
+                // 'voterating': movieDetails.voterating,
+                // 'posterpath': movieDetails.posterpath,
+              };
+              temparray.add({currentEditingTIme.value: newMovie});
+              await fdata.docs.first.reference.update({'movie': temparray});
+            }
+            Get.showSnackbar(const GetSnackBar(
+              message: 'Movie Added Successfully',
+              backgroundColor: Colors.green,
+              duration: Duration(seconds: 1),
+            ));
+            return;
+          }
 
-
-          Set<String> tmset = Set<String>.from(fdata.docs.first['Time']);
-          List<String> temp = tmset.toList();
+          List<String> temp = List<String>.from(fdata.docs.first['Time']);
+        
 
           temp.add(selectedTime.value.toString().substring(10, 15));
           await fdata.docs.first.reference.update({'Time': temp});
           log('Inserted time in a new field ');
         }
-        
-      }
+     
       Get.showSnackbar(const GetSnackBar(
         message: 'Time Updated Successfully',
         backgroundColor: Colors.green,

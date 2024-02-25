@@ -29,8 +29,15 @@ class MytextTheme {
       fontSize: 25,
       fontWeight: FontWeight.w900,
       letterSpacing: 0.9);
+ 
+ static TextStyle headingwhtiteText = const TextStyle(
+      fontFamily: 'Montserrat-Medium',
+      color: Color.fromARGB(255, 255, 255, 255),
+      fontSize: 18,
+      fontWeight: FontWeight.w900,
+      letterSpacing: 0.9);
 
-
+  
   static TextStyle descriptionText = const TextStyle(
       fontFamily: 'Montserrat-Medium',
       color: Color.fromARGB(255, 0, 0, 0),
@@ -56,5 +63,10 @@ class MytextTheme {
       letterSpacing: 0.9);
 
 
-
+  static TextStyle subheadigTExt = const TextStyle(
+      fontFamily: 'Montserrat-Medium',
+      color: Color.fromARGB(255, 0, 0, 0),
+      fontSize: 19,
+      fontWeight: FontWeight.w900,
+      letterSpacing: 0.9);
 }

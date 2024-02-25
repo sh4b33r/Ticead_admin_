@@ -1,0 +1,67 @@
+
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+class MovieScreen extends StatelessWidget {
+  final String theaterId;
+
+  const MovieScreen({Key? key, required this.theaterId}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Select Movie'),
+        leading: Icon(Icons.arrow_back),
+        backgroundColor: Colors.black,
+      ),
+      body: Column(
+        children: [
+          // Your existing UI components here...
+
+          // Replace the existing SearchUpdateWidget with StreamBuilder
+          StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance.collection('Movie').snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              }
+
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              }
+
+              // Extract MovieModel data from the snapshot
+              List<MovieModel> movies = snapshot.data!.docs.map((DocumentSnapshot document) {
+                Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+                return MovieModel(
+                  name: data['name'],
+                  descripiton: data['description'],
+                  rating: data['rating'],
+                  genres: data['genres'],
+                  backDrop: data['backDrop'],
+                  poster: data['poster'],
+                );
+              }).toList();
+
+              return Expanded(
+                child: ListView.builder(
+                  itemCount: movies.length,
+                  itemBuilder: (context, index) {
+                    // Replace with your desired UI for each movie item
+                    return ListTile(
+                      title: Text(movies[index].name),
+                      subtitle: Text(movies[index].description),
+                      // Add more widgets for other movie details as needed
+                    );
+                  },
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}

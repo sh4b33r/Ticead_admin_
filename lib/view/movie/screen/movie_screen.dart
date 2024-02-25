@@ -1,22 +1,24 @@
-import 'dart:async';
-
 import 'package:admin_ticead/controller/movie_controller/movie_controller.dart';
-import 'package:admin_ticead/model/app_calling/tmdb_api.dart';
+import 'package:admin_ticead/model/movie_model/movie_model.dart';
 import 'package:admin_ticead/view/movie/widget/mv_searchbuilder.dart';
+import 'package:admin_ticead/view/theme/color_n_style/main_colors.dart';
 import 'package:admin_ticead/view/theme/color_n_style/styletheme.dart';
 import 'package:admin_ticead/view/theme/text_theme/main_texts.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class MovieScreen extends StatelessWidget {
-  const MovieScreen({super.key});
+   final String theaterId;
+  const MovieScreen({super.key,required this.theaterId});
 
   @override
   Widget build(BuildContext context) {
-    final cntrl = Get.find<MovieController>();
-    Timer? _debounce;
+    final cntrl = Get.put(MovieController());
+    // Timer? _debounce;
     return Scaffold(
       appBar: AppBar(
+        title: Text('Select Movie',style: MytextTheme.headingText,),
+        leading: const Icon(Icons.arrow_back,color: MycolorTheme.custwhite,),
         backgroundColor: const Color.fromARGB(255, 0, 0, 0),
       ),
       body: SingleChildScrollView(
@@ -29,7 +31,7 @@ class MovieScreen extends StatelessWidget {
                   Card(
                     child: Container(
                       width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height * 0.65,
+                      height: MediaQuery.of(context).size.height * 0.80,
                       // color: const Color.fromARGB(255, 61, 61, 137),
                       decoration: const BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(14)),
@@ -44,17 +46,11 @@ class MovieScreen extends StatelessWidget {
                               child: TextField(
                                   controller: cntrl.moviesearchController,
                                   onChanged: (value) {
+                                    // cntrl.getMoviesStream(contollerval: true,name: value);
+                                    cntrl.searchMovies(value);
                                     if (value.isEmpty) {
-                                      // searchEmptyData();
-                                    } else {
-                                      if (_debounce?.isActive ?? false) {
-                                        _debounce?.cancel();
-                                      }
-                                      _debounce = Timer(
-                                          const Duration(milliseconds: 800),
-                                          () {
-                                        ApiCalling().searchData(value);
-                                      });
+
+                                 cntrl.fetchAlltomovies();
                                     }
                                   },
                                   decoration:
@@ -63,21 +59,20 @@ class MovieScreen extends StatelessWidget {
                                           icon: const Icon(Icons.movie),
                                           sufix: InkWell(
                                               onTap: () async{
-                                                await cntrl.searchEmptyData();
+                                                // await cntrl.searchEmptyData();
                                                 cntrl.moviesearchController
                                                     .clear();
-                                                // ApiCalling().searchData("");
                                              
                                               },
                                               child: const SizedBox(child: Icon(Icons.close)))),
                                   style: MytextTheme.descriptionText),
                             ),
                           ),
-
-                          // const Text('Your Text Widget'),
-                          // Image.asset('Your Image Asset Path'),
-                          const SingleChildScrollView(
-                              child: SearchUpdateWidget())
+                     SizedBox(height: 10,),
+                      Expanded(
+                            child: UpdatingWidget()
+                          ),
+                         
                         ],
                       ),
                     ),

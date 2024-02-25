@@ -1,5 +1,7 @@
 import 'package:admin_ticead/view/theme/text_theme/main_texts.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 class Styles{
 
@@ -39,5 +41,9 @@ class Styles{
     );
   }
 
+ 
+c1sSnackbar({required String Data,required bool green}){
+    Get.showSnackbar( GetSnackBar(message: Data, backgroundColor: green==true?Colors.green:Colors.red,isDismissible: true,duration: Duration(seconds: 1),));
+}
 
 }

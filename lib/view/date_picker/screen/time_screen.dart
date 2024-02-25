@@ -7,7 +7,8 @@ import 'package:intl/intl.dart';
 
 
 class DateMainPage extends StatelessWidget {
-  const DateMainPage({super.key});
+  final String theaterId;
+  const DateMainPage({super.key,required this.theaterId});
 
   @override
   Widget build(BuildContext context) {
@@ -15,12 +16,24 @@ class DateMainPage extends StatelessWidget {
    
     return  Scaffold(
  
+  appBar: AppBar(
+        leading: IconButton(onPressed: (){
+          Get.back();
+        }, icon: Icon(Icons.arrow_back),color: Colors.white,),
+        backgroundColor: Colors.black,
+        
+       
+        ),
     
       body: SingleChildScrollView(
       child: Column(
-          
+          crossAxisAlignment: CrossAxisAlignment.start,
         children:[
-           Text(DateFormat.yMMMd().format(DateTime.now()),style: MytextTheme.Medium14Text,),
+
+           Padding(
+             padding: const EdgeInsets.fromLTRB(13,10,0,0),
+             child: Text(DateFormat.yMMMd().format(DateTime.now()),style: MytextTheme.subheadigTExt,),
+           ),
            Padding(
              padding: const EdgeInsets.symmetric(horizontal: 13),
              child: Row(
@@ -35,7 +48,7 @@ class DateMainPage extends StatelessWidget {
                ],
              ),
            ),
-         DateWidget()
+         DateWidget(theaterId:theaterId)
           
            
           ]

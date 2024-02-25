@@ -1,5 +1,5 @@
 import 'package:admin_ticead/controller/timescreen_controller/time_scr_controller.dart';
-import 'package:admin_ticead/model/app_calling/tmdb_api.dart';
+
 import 'package:admin_ticead/view/theme/color_n_style/main_colors.dart';
 import 'package:admin_ticead/view/theme/text_theme/main_texts.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +15,7 @@ class MovieDetailView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:AppBar(backgroundColor: Colors.black,),
+      appBar:AppBar(backgroundColor: Colors.black,title: Text(selectedMovie.name.toString()),),
       backgroundColor: MycolorTheme.custwhite,
       body: ListView(
         children: [
@@ -26,14 +26,22 @@ class MovieDetailView extends StatelessWidget {
               ),
               Stack(
                 children: [
+                  // Container(
+                  //   color: Colors.amber,
+                  //   height: 300,
+                  // width: 150,
+                  
+                  // ),
+                  // --------------------------------------------------------
                   SizedBox(
                       height: 300,
                       width: 150,
                       child: Image.network(
-                        Constants.iMgurl + selectedMovie.posterpath!,
+                        selectedMovie.poster,
                         height: 250,
                         width: 30,
                       )),
+                  // ==========================================================
                   Positioned(
                     left: 96,
                     top: 220,
@@ -44,7 +52,7 @@ class MovieDetailView extends StatelessWidget {
                         backgroundColor: MycolorTheme.mycolor,
                         radius: 26,
                         child: Text(
-                          selectedMovie.voterating,
+                          selectedMovie.rating.toString(),
                           style: const TextStyle(
                               color: Color.fromARGB(255, 255, 255, 255)),
                         ),
@@ -58,7 +66,7 @@ class MovieDetailView extends StatelessWidget {
               ),
               Expanded(
                   child: Text(
-              selectedMovie.title!,
+              selectedMovie.name,
                 style: MytextTheme.headingText
               )),
             ],
@@ -71,14 +79,14 @@ class MovieDetailView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Language: ${selectedMovie.language.toUpperCase()}",
+                      "Language: ${selectedMovie.genres.toUpperCase()}",
                       style: MytextTheme.Medium15Text
                     ),
                     const SizedBox(
                       height: 20,
                     ),
                     Text(
-                     selectedMovie.overview!,
+                     selectedMovie.descripiton,
                      style: MytextTheme.Medium15Text,
                       textAlign: TextAlign.start,
                     ),

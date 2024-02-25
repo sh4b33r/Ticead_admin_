@@ -56,8 +56,11 @@ Future<String> addUser(String? email, String? name) async {
         await FirebaseFirestore.instance.collection('theatre_admin').add({
       'email': email,
       'name': name,
+      'theatreIds': [],
       'timestamp': FieldValue.serverTimestamp(),
     });
+
+   
 
     return id.id;
   } else {
@@ -65,3 +68,23 @@ Future<String> addUser(String? email, String? name) async {
     return existingUserId;
   }
 }
+
+
+// updte theatre id with admin
+
+Future<void> updatetheatrewithidstoadmin(String theatreId)async{
+ log("ivide ethiiikin ${SharedPref().sharedInstance.toString()}");
+ await FirebaseFirestore.instance.collection('theatre_admin').doc(SharedPref().sharedInstance.toString()).update({'theatreIds':FieldValue.arrayUnion([theatreId])});
+
+} 
+
+
+
+// Future<List<DocumentSnapshot>> getTheatersForAdmin(String? adminId) async {
+//   QuerySnapshot theatersSnapshot = await FirebaseFirestore.instance
+//       .collection('theatre')
+//       .where('admin_id', isEqualTo: adminId)
+//       .get();
+
+//   return theatersSnapshot.docs;
+// }

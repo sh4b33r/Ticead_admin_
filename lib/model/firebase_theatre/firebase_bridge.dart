@@ -2,7 +2,10 @@
 import 'dart:io';
 import 'dart:developer';
 
+import 'package:admin_ticead/controller/theatre_controller/theatre_controller.dart';
+import 'package:admin_ticead/model/siginin/signin.dart';
 import 'package:admin_ticead/model/theatre_model/theatre_model.dart';
+import 'package:admin_ticead/view/theme/color_n_style/styletheme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:firebase_storage/firebase_storage.dart';
@@ -10,7 +13,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../shared_pref/shared_funcitons.dart';
+
 class FirebaseService {
+  final controller=Get.find<TheatreController>();
 // =================================
 // Adding USer Auhtenticating
 // ---------------------------------'
@@ -57,6 +63,11 @@ class FirebaseService {
       });
 
       log('Document added with ID: ${a.id}');
+       Styles().c1sSnackbar(
+                      Data: "Data Added Succesfully ", green: true);
+                      // log('sharedinstance :${sharedInstance as String}');
+                      log(SharedPref().sharedInstance.toString());
+     await updatetheatrewithidstoadmin(a.id);
     } catch (e) {
       log('Error adding document: $e');
 
@@ -98,45 +109,40 @@ class FirebaseService {
    }
   return downloadUrls;
   }
+
+
+
+
+
+// =================================
+// EDitig theatre Data from Firebase
+// ---------------------------------
+
+
+
+toeditFromFBase(TheatreModel theatre)async{
+await FirebaseFirestore.instance.collection('theatre').doc(controller.TheatreId.toString()).update({
+
+ 'admin_id':theatre.theatreAdminId,
+        'name': theatre.name,
+        'description': theatre.description,
+        'image': theatre.image,
+        'normal': theatre.normal,
+        'executive': theatre.executive,
+        'reclined': theatre.reclined,
+        'premium': theatre.premium,
+        'location':GeoPoint( theatre.location.latitude, theatre.location.longitude),
+        'normal_Price':theatre.normalprice,
+        'premium_Price':theatre.premiumprice,
+        'executive_Price':theatre.executiveprice,
+        'reclined_Price':theatre.reclinedprice,
+
+});
+Styles().c1sSnackbar(Data: 'data Edited Succesully',green: true);
+
 }
 
 
 
+}
 
-
-
-
-
-
-
-
-
-// Future<List<String>> uploadXFilesToFirebase(List<XFile> files) async {
-//   List<String> downloadUrls = [];
-
-//   for (XFile file in files) {
-//     try {
-//       // Generate unique filename
-//       String fileName = "${basenameWithoutExtension(file.path!)}_${DateTime.now().millisecondsSinceEpoch}.${extension(file.path!)}";
-
-//       // Create reference
-//       Reference ref = FirebaseStorage.instance.ref().child(fileName);
-
-//       // Upload task with metadata
-//       UploadTask uploadTask = ref.putFile(File(file.path!));
-//       uploadTask.setMetadata(SettableMetadata(contentType: file.mimeType));
-
-//       // Wait for upload and get download URL
-//       TaskSnapshot snapshot = await uploadTask;
-//       String downloadUrl = await snapshot.ref.getDownloadURL();
-
-//       // Add download URL to list
-//       downloadUrls.add(downloadUrl);
-//     } catch (error) {
-//       print("Error uploading file: $error");
-//       // Handle error (e.g., show user message, retry upload)
-//     }
-//   }
-
-//   return downloadUrls;
-// }

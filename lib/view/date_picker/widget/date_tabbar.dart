@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:admin_ticead/controller/movie_controller/movie_controller.dart';
 import 'package:admin_ticead/controller/timescreen_controller/time_scr_controller.dart';
 import 'package:admin_ticead/view/movie/screen/movie_screen.dart';
 import 'package:admin_ticead/view/theme/color_n_style/main_colors.dart';
@@ -9,7 +10,8 @@ import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
 class DateWidget extends StatelessWidget {
-  const DateWidget({Key? key}) : super(key: key);
+ final String theaterId;
+  const DateWidget({Key? key,required this.theaterId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +31,8 @@ class DateWidget extends StatelessWidget {
                 width: 80,
                 controller: controller.datecontroller.value,
                 initialSelectedDate: DateTime.now(),
-                selectionColor: MycolorTheme.custwhite,
-                selectedTextColor: Colors.red,
+                selectionColor: const Color.fromARGB(247, 231, 248, 235),
+                selectedTextColor: const Color.fromARGB(255, 0, 0, 0),
                 deactivatedColor: const Color.fromARGB(255, 235, 233, 233),
                 dateTextStyle: const TextStyle(color: Colors.amber),
                 dayTextStyle: const TextStyle(color: Colors.amber),
@@ -93,11 +95,12 @@ class DateWidget extends StatelessWidget {
                                 ),
                               ),
                               trailing: ElevatedButton(
-                                  onPressed: () {
+                                  onPressed: () async{
                                     controller.currentEditingTIme.value=times[index];
                                     log(controller.currentEditingTIme.value.toString());
                                     log(controller.selectedDAte.value.toString());
-                                    Get.to(MovieScreen());
+                                    // await Get.find<MovieController>().getdatatoAllMovies();
+                                    Get.to(MovieScreen(theaterId:theaterId));
                                   },
                                   child: Text('Select Movie')),
                             ),

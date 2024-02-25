@@ -8,7 +8,7 @@ class TheatreModel {
   final String theatreAdminId;
   final String name;
   final String description;
-  final List image;
+  final List<dynamic> image;
   bool normal = false;
   bool executive = false;
   bool reclined = false;

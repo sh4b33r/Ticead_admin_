@@ -52,6 +52,9 @@ dependencies:
   date_picker_timeline: ^1.2.5
   http: ^1.2.0
   connectivity_plus: ^5.0.2
+  carousel_slider: ^4.2.1
+  book_my_seat: ^1.0.1
+  two_dimensional_scrollables: ^0.1.1
   
   
 

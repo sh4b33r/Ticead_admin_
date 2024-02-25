@@ -23,6 +23,7 @@ class GMapPage extends StatelessWidget {
                 LatLng? position = controller.latLng.value;
                 log('pinneyu build ayi');
                 return GoogleMap(
+
                   onTap: (argument) {
                     // controller.onClickedLocation(argument);
 
