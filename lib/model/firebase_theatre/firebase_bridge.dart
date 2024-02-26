@@ -2,6 +2,7 @@
 import 'dart:io';
 import 'dart:developer';
 
+
 import 'package:admin_ticead/controller/theatre_controller/theatre_controller.dart';
 import 'package:admin_ticead/model/siginin/signin.dart';
 import 'package:admin_ticead/model/theatre_model/theatre_model.dart';
@@ -67,6 +68,13 @@ class FirebaseService {
                       Data: "Data Added Succesfully ", green: true);
                       // log('sharedinstance :${sharedInstance as String}');
                       log(SharedPref().sharedInstance.toString());
+   
+    //  Get.rawSnackbar(
+    //   backgroundColor: Colors.green,
+    //   message: 'Back to the previous screen',
+    //   snackStyle: SnackStyle.FLOATING,
+    // );
+
      await updatetheatrewithidstoadmin(a.id);
     } catch (e) {
       log('Error adding document: $e');
@@ -82,37 +90,20 @@ class FirebaseService {
 // Sending image That are picked by imagepicker to Firbase Storage
 // --------------------------------------------------------------
 
- static Future<List<String>> imgsendingtoFStorage(List<XFile> imagexfile) async {
+ static Future<String> imgsendingtoFStorage(XFile imagexfile) async {
   
-    List<String> downloadUrls = [];
-    
+    // List<String> downloadUrls = [];  
     // final name=Datetime.now
-    tosendandgeturl(file) async {
       final storageRef = FirebaseStorage.instance.ref();
       String name=DateTime.now().toString();
       String fileName = "theatreimage/$name.jpg";
       Reference refernece = storageRef.child(fileName);
-      TaskSnapshot upload =await refernece.putFile(File(file.path!));
-        
-        
+      TaskSnapshot upload =await refernece.putFile(File(imagexfile.path));       
       String url = await upload.ref.getDownloadURL();
+      return url;  
+ }
 
-      return url;
-    }
-
-
-  for(XFile file in imagexfile){
   
-   final data = await tosendandgeturl(file);
-   downloadUrls.add(data);
-  
-   }
-  return downloadUrls;
-  }
-
-
-
-
 
 // =================================
 // EDitig theatre Data from Firebase
@@ -121,7 +112,8 @@ class FirebaseService {
 
 
 toeditFromFBase(TheatreModel theatre)async{
-await FirebaseFirestore.instance.collection('theatre').doc(controller.TheatreId.toString()).update({
+  log(controller.TheatreId.toString());
+await FirebaseFirestore.instance.collection('theatre').doc(controller.currentTheatreID.toString()).update({
 
  'admin_id':theatre.theatreAdminId,
         'name': theatre.name,

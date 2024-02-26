@@ -107,7 +107,7 @@ class SeatSelection extends StatelessWidget {
             controller.normal.value == true
                 ? Padding(
                     padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
-                    child: CustomFormPriceField(hintText: 'Normal'))
+                    child: CustomFormPriceField( controller: controller.cntrlNormal, hintText: 'Normal'))
                 : const SizedBox(),
         
             // Custom price TEXTFIELD for EXECUTIVE
@@ -115,7 +115,7 @@ class SeatSelection extends StatelessWidget {
             controller.executive.value == true
                 ? Padding(
                     padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
-                    child: CustomFormPriceField(hintText: 'Executive'))
+                    child: CustomFormPriceField( controller: controller.cntrlExecutive, hintText: 'Executive'))
                 : const SizedBox(),
         
             // Custom price TEXTFIELD for PREMIUM
@@ -124,6 +124,7 @@ class SeatSelection extends StatelessWidget {
                 ? Padding(
                     padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
                     child: CustomFormPriceField(
+                      controller: controller.cntrlPremium, 
                       hintText: 'Premium',
                     ))
                 : const SizedBox(),
@@ -133,7 +134,7 @@ class SeatSelection extends StatelessWidget {
             controller.reclined.value == true
                 ? Padding(
                     padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
-                    child: CustomFormPriceField(hintText: 'Recliner'))
+                    child: CustomFormPriceField(controller: controller.cntrlreclined, hintText: 'Recliner'))
                 : const SizedBox(),
           ],
         );

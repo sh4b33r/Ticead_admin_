@@ -42,7 +42,7 @@ class UpdatingWidget extends StatelessWidget {
                       Image.network(
                         snapshot.data![index].poster,
                         errorBuilder: (context, error, stackTrace) {
-                          
+                           return Lottie.asset('asset/lottie/image_loading.json');
                         },
                         loadingBuilder: (context, child, loadingProgress) {
                           if (loadingProgress == null) {

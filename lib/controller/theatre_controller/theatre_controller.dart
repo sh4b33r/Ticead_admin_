@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:admin_ticead/controller/map_controller/gmap_controller.dart';
+import 'package:admin_ticead/model/firebase_theatre/firebase_bridge.dart';
 import 'package:admin_ticead/model/theatre_model/theatre_model.dart';
 import 'package:admin_ticead/view/theme/color_n_style/styletheme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -12,10 +13,12 @@ class TheatreController extends GetxController {
   Rx<String> currentTheatreID=''.obs;
   RxBool normal = true.obs;
   RxBool executive = false.obs;
+  RxBool isloadingImg=false.obs;
   RxBool ImageNotpicked=false.obs;
   String? TheatreId ;
   RxBool premium = false.obs;
   RxBool reclined = false.obs;
+  Rx<LatLng> editedlocation=LatLng(11.0510,76.056).obs;
   RxList<XFile> image = <XFile>[].obs;
   List<String> names = [];
   RxList<String> imageUrls= <String>[].obs;
@@ -26,6 +29,8 @@ class TheatreController extends GetxController {
   TextEditingController? cntrlPremium = TextEditingController();
   TextEditingController? cntrlreclined = TextEditingController();
   final formKey = GlobalKey<FormState>();
+  RxBool isEditingImages = false.obs;
+  
 //  RxList<XFile> imageFileList = [].obs;
 
 // =================================
@@ -42,34 +47,56 @@ class TheatreController extends GetxController {
 // List of Images pIcking
 // ---------------------------------
 
-  Future<void> pickImage() async {
-    final selctimgsFile = await ImagePicker().pickMultiImage();
+Future<void> pickImage(bool isEditing) async {
+try {
+  final selctimgsFile = await ImagePicker().pickMultiImage();
+  isloadingImg.value = true;
+    update(); 
+  if (selctimgsFile.isNotEmpty) {
+    for (var slctdsingle in selctimgsFile) {
+      String toconvert = slctdsingle.name;
+      log(names.toString());
 
-    if (selctimgsFile.isNotEmpty) {
-      for (var slctdsingle in selctimgsFile) {
-        String toconvert = slctdsingle.name;
-         log(names.toString());
+      // if (!names.contains(toconvert)) {
+  
+        String downloadUrl = await FirebaseService.imgsendingtoFStorage(slctdsingle);
 
-        if (!names.contains(toconvert)) {
-          image.add(slctdsingle);          update();
-          names.add(toconvert);
-        }
-      }
-    } else {
-      log('no');
+        image.add(slctdsingle);
+
+        imageUrls.add(downloadUrl);
+        log('scucess $downloadUrl');
+
+        // Update the UI
+        update();
+
+        // names.add(toconvert);
+      // }
     }
-    // image.value = imgFile.path;
-     log(names.toString());
-    log("Image List Length:${image.length}");
-    // update();
+  } else {
+    log('no');
   }
+} finally {
+   isloadingImg.value = false;
+    update(); 
+}
+ 
+}
+// ---------------------------------------
+// delete image from update screen 
+// ========================================
+
+editedImageDeleting(img)async{
+   imageUrls.remove(img);
+   update();
+
+} 
 
 // =================================
 // clearing Images that are pIcked
 // ---------------------------------
 
   Future<void> clearImage() async {
-    image.clear();
+    imageUrls.clear();
     update();
   }
 
@@ -81,6 +108,7 @@ class TheatreController extends GetxController {
 //     log('nameindex   $index');
 
     image.removeAt(index);
+    imageUrls.removeAt(index);
     names.removeAt(index);
     update();
   }
@@ -98,7 +126,7 @@ class TheatreController extends GetxController {
     cntrlPremium?.clear();
     cntrlreclined?.clear();
 
-    image.clear();
+    imageUrls.clear();
     update();
   }
 
@@ -130,7 +158,8 @@ class TheatreController extends GetxController {
 // ---------------------------------
 
 Future<void> assignvalues(Map<String, dynamic>? val,)async{
- 
+  GeoPoint gpoint =val!['location'];
+  LatLng points=LatLng(gpoint.latitude,gpoint.longitude);
     final theatre= TheatreModel(
         theatreAdminId: val!["admin_id"],
         name: val["name"],
@@ -140,11 +169,11 @@ Future<void> assignvalues(Map<String, dynamic>? val,)async{
         executive: val["executive"],
         premium: val["premium"],
         reclined: val["reclined"],
-        location: const LatLng(45, 110),
-        executiveprice: "0",
-        normalprice: "0",
-        reclinedprice: "0",
-        premiumprice: "0");
+        location: points,
+        executiveprice: val["executive_Price"],
+        normalprice: val["normal_Price"],
+        reclinedprice: val["reclined_Price"],
+        premiumprice: val["premium_Price"]);
        
 
 
@@ -157,15 +186,29 @@ Future<void> assignvalues(Map<String, dynamic>? val,)async{
 //  image.value=(val!["image"] as List<String>).map((url) => XFile(url)).toList();
  imageUrls.value=
      List<String>.from(val["image"]);
-  
- cntrlNormal?.text='0';
- cntrlExecutive?.text='0';
- cntrlPremium?.text="0";
- cntrlreclined?.text="0";
+  log("before    ${editedlocation.value.toString()}");
+   if (val["location"] != null) {
+     GeoPoint geoPoint = val["location"] as GeoPoint;
+    double latitude = geoPoint.latitude;
+    double longitude = geoPoint.longitude;
+    
+
+    editedlocation.value =  
+   LatLng(latitude, longitude);
+  }
+log("after     ${editedlocation.value.toString()}");
+
+
+
+ cntrlNormal?.text=theatre.normalprice ?? '0';
+ cntrlExecutive?.text= theatre.executiveprice ??'0';
+ cntrlPremium?.text=theatre.premiumprice ?? "0";
+ cntrlreclined?.text=theatre.reclinedprice ?? "0";
  normal.value=theatre.normal;
  executive.value= theatre.executive;
  premium.value=theatre.premium;
- Get.find<GMapController>().latLng.value=LatLng(10.3434, 76.5475);
+//  editedlocation.value=LatLng(11.0510,11.0510);4
+Get.put(GMapController()).latLng.value=editedlocation.value ?? LatLng(11.0510, 76.0711);
  reclined.value=theatre.reclined ;
 
   

@@ -1,4 +1,5 @@
 import 'package:admin_ticead/controller/theatre_controller/theatre_controller.dart';
+import 'package:admin_ticead/view/seat_/screen/seatscreen.dart';
 import 'package:admin_ticead/view/theatre/widget/text_formcustom.dart';
 import 'package:admin_ticead/view/theatre/widget/texts_field.dart';
 import 'package:admin_ticead/view/theme/color_n_style/main_colors.dart';
@@ -39,6 +40,7 @@ class TheatreaddScreen extends StatelessWidget {
                     blurRadius: 15)
               ],
             ),
+
             child: SingleChildScrollView(
               child: Form(
                 key: controller.formKey,
@@ -48,6 +50,9 @@ class TheatreaddScreen extends StatelessWidget {
                     textfields(controller.cntrlName, controller.cntrlDesc,),
                     // TextsFieldsCustom(),
                     //  isEditing?
+                    ElevatedButton(onPressed: (){
+                      Get.to( SeatScreen());
+                    }, child: Text('Configure Seats')),
                      TexTFormfields(isEditing: isEditing,)
                     // TexTFormfields(),
                   ],

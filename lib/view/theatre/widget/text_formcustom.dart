@@ -1,6 +1,6 @@
 // ignore_for_file: must_be_immutable
 
-import 'dart:io';
+
 import 'dart:developer';
 
 import 'package:admin_ticead/controller/map_controller/gmap_controller.dart';
@@ -22,14 +22,18 @@ import '../../gmap/g_map.dart';
 class TexTFormfields extends StatelessWidget {
  
  final bool isEditing;
+
    TexTFormfields({super.key,this.isEditing=false});
   // var u;
   TextEditingController controllertext = TextEditingController();
 
   final controllerobj = Get.find<TheatreController>();
-  final gcontroller = Get.put(GMapController());
+  final gcontroller =Get.put(GMapController());
+  
   @override
   Widget build(BuildContext context) {
+    controllerobj.isloadingImg.value=false;
+    
     return Column(children: [
 //  PickImage
       Padding(
@@ -51,20 +55,33 @@ Container(
   decoration: BoxDecoration(
     color: const Color.fromARGB(22, 0, 0, 0),
   ),
-  child: controller.image.isEmpty
-      ? (isEditing
+  child:controllerobj.isloadingImg.value
+      ? Lottie.asset('asset/lottie/loadingimg.json') :
+   controller.image.isEmpty
+      ? (isEditing 
           ? ListView.builder(
+            
               scrollDirection: Axis.horizontal,
               itemCount: controllerobj.imageUrls.length,
               itemBuilder: (context, index) {
+                log('builded first $isEditing');
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    child: Image.network(
-                       controllerobj.imageUrls[index],
-                      height: 100,
-                      width: 100,
-                      fit: BoxFit.contain,
+                  child: GestureDetector(
+                     onTap: () {
+              // Implement logic to edit the image
+            },
+            onDoubleTap: () {
+              // removeImage(index);
+              controllerobj.editedImageDeleting(controllerobj.imageUrls[index]);
+            },
+                    child: Container(
+                      child: Image.network(
+                         controllerobj.imageUrls[index],
+                        height: 100,
+                        width: 100,
+                        fit: BoxFit.contain,
+                      ),
                     ),
                   ),
                 );
@@ -73,17 +90,24 @@ Container(
           : Lottie.asset('asset/lottie/Animation - 1707367816983.json'))
       : ListView.builder(
           scrollDirection: Axis.horizontal,
-          itemCount: controller.image.length,
+          itemCount: controller.imageUrls.length,
           itemBuilder: (context, index) {
+                  log('builded Second $isEditing');
             return InkWell(
               onDoubleTap: () {
-                controller.removeImage(index);
+                
+                        if(isEditing){
+    controllerobj.editedImageDeleting( controllerobj.imageUrls[index]);
+                        }else{
+     controller.removeImage(index);
+                        }
+               
               },
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
-                  child: Image.file(
-                    File(controller.image[index].path),
+                  child: Image.network(
+                controllerobj.imageUrls[index],
                     height: 100,
                     width: 100,
                     fit: BoxFit.contain,
@@ -142,7 +166,7 @@ Container(
       ElevatedButton.icon(
           style: ElevatedButton.styleFrom(backgroundColor: Colors.amber),
           onPressed: () async {
-            await controllerobj.pickImage();
+            await controllerobj.pickImage(isEditing);
           },
           icon: const Icon(Icons.camera_alt_outlined),
           label: const Text('Pick Image')),
@@ -219,22 +243,45 @@ Container(
                   backgroundColor: Colors.transparent,
                   shadowColor: Colors.transparent),
               onPressed: () async {
-                final urls = await FirebaseService.imgsendingtoFStorage(
-                    controllerobj.image);
-                log('all urls  textformcutom_141>>>>>> $urls');
+                // final urls = await FirebaseService.imgsendingtoFStorage(
+                //     controllerobj.image);
+                // log('all urls  textformcutom_141>>>>>> $urls');
                 log(controllerobj.cntrlNormal?.text as String);
                 if (controllerobj.image.isEmpty) {
                   Styles().c1sSnackbar(
                       Data: "Can't Leave Image Empty ", green: false);
                 }
+ if(isEditing){
+//  Ediitng
+ if (controllerobj.formKey.currentState!.validate() &&
+                    controllerobj.image.isNotEmpty) {}
 
+                  await FirebaseService().toeditFromFBase(TheatreModel(theatreAdminId:SharedPref().sharedInstance.toString() ,      name: controllerobj.cntrlName.text,
+                    description: controllerobj.cntrlDesc.text,
+                    image: controllerobj.imageUrls,
+                    normal: controllerobj.normal.value,
+                    executive: controllerobj.executive.value,
+                    premium: controllerobj.premium.value,
+                    reclined: controllerobj.reclined.value,
+                    location: gcontroller.latLng.value,
+                    reclinedprice: controllerobj.cntrlreclined?.text ?? '0',
+                    executiveprice: controllerobj.cntrlExecutive?.text ?? '0',
+                    normalprice: controllerobj.cntrlNormal?.text ?? '0',
+                    premiumprice: controllerobj.cntrlPremium?.text ?? '0',));
+
+  await      Future.delayed(Duration(seconds: 2));
+                   Get.back();
+ }else{
+// ------------------------
+  // addding
+// ---------------------------
                 if (controllerobj.formKey.currentState!.validate() &&
                     controllerobj.image.isNotEmpty) {
                   await FirebaseService.sendDatatoFirebase(TheatreModel(
                     theatreAdminId: SharedPref().sharedInstance.toString(),
                     name: controllerobj.cntrlName.text,
                     description: controllerobj.cntrlDesc.text,
-                    image: urls,
+                    image: controllerobj.imageUrls,
                     normal: controllerobj.normal.value,
                     executive: controllerobj.executive.value,
                     premium: controllerobj.premium.value,
@@ -249,11 +296,15 @@ Container(
 
                   controllerobj.clearAllThings();
                 }
+                   await      Future.delayed(Duration(seconds: 2));
+                   Get.back();
 
+
+ }
                 //  return
               },
               child: Text(
-                'Submit',
+                isEditing?'Update': 'Submit',
                 style: MytextTheme.commomText,
               )),
         ),

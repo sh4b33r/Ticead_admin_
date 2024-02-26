@@ -69,6 +69,7 @@ class HOmeScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
           onPressed: () {
+              Tcontroller.clearAllThings();
             Get.to(TheatreaddScreen());
           },
           child: const Icon(Icons.add)),
@@ -78,7 +79,7 @@ class HOmeScreen extends StatelessWidget {
           children: [
             // sharedcheckbutton
          Visibility(
-         visible: true, 
+         visible: false, 
            child:   ElevatedButton(
                 onPressed: () async {
                   // Get.to(const DateMainPage());

@@ -15,8 +15,10 @@ class CustomFormPriceField extends StatelessWidget {
   Widget build(BuildContext context) {
      log(hintText.toString());
     return TextFormField(
+      keyboardType: TextInputType.number,
+      controller: controller,
            decoration: InputDecoration(
-      
+                
                     hintText: hintText,
                     hintStyle: MytextTheme.textformsText,
                     border: const OutlineInputBorder()

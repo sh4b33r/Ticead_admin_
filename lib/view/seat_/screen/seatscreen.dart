@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:book_my_seat/book_my_seat.dart';
 import 'package:flutter/material.dart';
 
+
 class SeatScreen extends StatefulWidget {
   const SeatScreen({Key? key}) : super(key: key);
 
@@ -22,7 +23,7 @@ class _SeatScreenState extends State<SeatScreen> {
           const SizedBox(
             height: 16,
           ),
-          const Text("Front of bus is this side"),
+          const Text("Screen This Side"),
           Image.asset('asset/image/Group seat.png'),
           const SizedBox(
             height: 32,
@@ -30,32 +31,42 @@ class _SeatScreenState extends State<SeatScreen> {
           Flexible(
             child: SizedBox(
               height: 400,
-              child: SeatLayoutWidget(
-                onSeatStateChanged: (rowI, colI, seatState) {
-                  if (seatState == SeatState.selected) {
-                    selectedSeats
-                        .add(SeatNumber(rowI: rowI, colI: colI));
-                    log(selectedSeats.toString());
-                  } else {
-                    selectedSeats
-                        .remove(SeatNumber(rowI: rowI, colI: colI));
-                    log(selectedSeats.toString());
-                  }
-                },
-                stateModel: SeatLayoutStateModel(
-                    rows: 40,
-                    cols: 30,
-                    seatSvgSize: 20,
-                    pathSelectedSeat: 'asset/image/seat_selected.svg',
-                    pathDisabledSeat: 'asset/image/seat_disabled.svg',
-                    pathSoldSeat: 'asset/image/seat_sold.svg',
-                    pathUnSelectedSeat:
-                        'asset/image/seat_unselected.svg',
-                    currentSeatsState: List.generate(40, (rowIndex) {
-                      return List.generate(38, (colIndex) {
-                        return SeatState.unselected;
-                      });
-                    })),
+              child: ListView(
+                scrollDirection: Axis.vertical,
+                children: [
+                  SizedBox(
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: SeatLayoutWidget(
+                        onSeatStateChanged: (rowI, colI, seatState) {
+                          if (seatState == SeatState.selected) {
+                            selectedSeats
+                                .add(SeatNumber(rowI: rowI, colI: colI));
+                            log(selectedSeats.toString());
+                          } else {
+                            selectedSeats
+                                .remove(SeatNumber(rowI: rowI, colI: colI));
+                            log(selectedSeats.toString());
+                          }
+                        },
+                        stateModel: SeatLayoutStateModel(
+                            rows: 40,
+                            cols: 30,
+                            seatSvgSize: 20,
+                            pathSelectedSeat: 'asset/image/seat_selected.svg',
+                            pathDisabledSeat: 'asset/image/seat_disabled.svg',
+                            pathSoldSeat: 'asset/image/seat_sold.svg',
+                            pathUnSelectedSeat:
+                                'asset/image/seat_unselected.svg',
+                            currentSeatsState: List.generate(40, (rowIndex) {
+                              return List.generate(38, (colIndex) {
+                                return SeatState.unselected;
+                              });
+                            })),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

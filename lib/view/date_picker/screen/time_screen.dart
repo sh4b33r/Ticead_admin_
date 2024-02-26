@@ -13,7 +13,7 @@ class DateMainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
    final cntrl=Get.put(TImeController());
-   
+    cntrl.thatreoftimecurrent.value=theaterId;
     return  Scaffold(
  
   appBar: AppBar(
@@ -42,8 +42,10 @@ class DateMainPage extends StatelessWidget {
                  Text('Today',style: MytextTheme.Medium15Text,),
                  ElevatedButton(onPressed: ()async{
                             
-                     await cntrl.selectTime(context);
-                            cntrl.sendDateTimedata();
+                    final val= await cntrl.selectTime(context);
+                          if(val){
+cntrl.sendDateTimedata();
+                          }  
                  }, child: Text('Add Timing'))
                ],
              ),

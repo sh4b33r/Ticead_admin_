@@ -1,3 +1,4 @@
+import 'package:admin_ticead/controller/theatre_controller/theatre_controller.dart';
 import 'package:admin_ticead/view/theme/text_theme/main_texts.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -42,8 +43,35 @@ class Styles{
   }
 
  
-c1sSnackbar({required String Data,required bool green}){
+c1sSnackbar({required String Data,required bool green,}){
     Get.showSnackbar( GetSnackBar(message: Data, backgroundColor: green==true?Colors.green:Colors.red,isDismissible: true,duration: Duration(seconds: 1),));
 }
-
+ 
+  void showAlertDialog(BuildContext context,String theatreID) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Are You Sure You want to Delete'),
+            content: Text("Deleteing theatre can't be retrieved ",style: MytextTheme.commomText,),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: const Text('Confirm'),
+                onPressed: () {
+                  Get.find<TheatreController>().deleteTheatre(theatreID);
+                  Navigator.of(context).pop();
+                  
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
 }

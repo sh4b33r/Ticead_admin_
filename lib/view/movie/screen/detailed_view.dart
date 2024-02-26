@@ -97,9 +97,10 @@ const SizedBox(height: 40,),
 
               Column(
                 children: [
-                  ElevatedButton(onPressed: (){
+                  ElevatedButton(onPressed: ()async{
 
-Get.find<TImeController>().sendDateTimedata(movie: true,movieDetails: selectedMovie);
+await Get.find<TImeController>().movieSending(selectedMovie);
+// (movie: true,movieDetails: selectedMovie);
 
                   }, child: const Text('Submit')),
                 ],

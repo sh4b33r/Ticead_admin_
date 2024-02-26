@@ -3,6 +3,7 @@ import 'package:admin_ticead/controller/theatre_controller/theatre_controller.da
 import 'package:admin_ticead/model/theatre_model/theatre_model.dart';
 
 import 'package:admin_ticead/view/theatre/screen/theatre_dtview.dart';
+import 'package:admin_ticead/view/theme/color_n_style/styletheme.dart';
 import 'package:admin_ticead/view/theme/text_theme/main_texts.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -32,9 +33,9 @@ final controller= Get.find<TheatreController>();
     },
 
     onDoubleTap: (){
-
+Styles().showAlertDialog(context,theaterId);
       // Get.put(TheatreEditcontroller()).deleteTheatre(theaterId);
-      controller.deleteTheatre(theaterId);
+     
     },
             child: Card(
               color: Color.fromARGB(255, 201, 242, 211),

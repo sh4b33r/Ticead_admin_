@@ -36,6 +36,7 @@ class TheatreDetailedView extends StatelessWidget {
           log("${data.data()}");
 
     
+    Tcontroller.clearAllThings();
   
              Tcontroller.assignvalues(data.data());
 
@@ -43,9 +44,7 @@ class TheatreDetailedView extends StatelessWidget {
           Get.to(TheatreaddScreen(isEditing: true,));
 
 
-// to !!EDIT!! 1 Edit Screen with first thing to do  
-     
-          // Get.to(TheatreaddScreen(isEditing: true));
+
         }, icon: Icon(Icons.edit,color: MycolorTheme.custwhite,))],
         ),
            
