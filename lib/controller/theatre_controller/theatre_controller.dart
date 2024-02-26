@@ -30,7 +30,7 @@ class TheatreController extends GetxController {
   TextEditingController? cntrlreclined = TextEditingController();
   final formKey = GlobalKey<FormState>();
   RxBool isEditingImages = false.obs;
-  
+  dynamic submit=Text('Submit').obs;
 //  RxList<XFile> imageFileList = [].obs;
 
 // =================================

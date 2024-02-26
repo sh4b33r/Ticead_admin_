@@ -82,7 +82,8 @@ class DateWidget extends StatelessWidget {
                         itemCount: snapshot.data!.docs[0]['Time'].length,
                         
                         itemBuilder: (context, index) {
-                              final timeKey = snapshot.data!.docs[0]['Time'][index].keys.toString().substring(1, 6);
+                          log('${snapshot.data!.docs[0]['Time'][index][snapshot.data!.docs[0]['Time'][index].keys.toString().substring(1,6)]}');
+                              final timeKey = snapshot.data!.docs[0]['Time'][index].keys.toString();
                           log('${snapshot.data!.docs[0]['Time'][index].keys.toString().substring(1,6)}');
                           return Padding(
                             padding: const EdgeInsets.all(8.0),
@@ -130,48 +131,62 @@ startActionPane: ActionPane(
       
     ],),
     
-                              child: ColoredBox(
-                                color: Color.fromARGB(115, 238, 245, 246),
-                                child: ListTile(
-                                tileColor: const Color.fromARGB(255, 55, 46, 19),
-                                
-                                  title: InkWell(
-                                    onTap: () async{
-                                      final oldtime=snapshot.data!.docs[0]['Time'][index].keys.toString().substring(1,6);
-                                  //  controller.check();
-                                  log(oldtime);
-                                    await  controller.selectTime(
-                                          context,
-                                          TimeOfDay(
-                                              hour: int.tryParse(
-                                                      snapshot.data!.docs[0]['Time'][index].keys.substring(0, 2))
-                                                  as int,
-                                              minute: int.tryParse(
-                                                    snapshot.data!.docs[0]['Time'][index].keys.substring(3, 5))
-                                                  as int));
-                                            controller.sendDateTimedata( update:  true,oldtime:  oldtime,);
-                                      //  log(int.tryParse(times[index].substring(0,2)).toString());
-                                    },
-                                    child: Text(
-                                      snapshot.data!.docs[0]['Time'][index].keys.toString().substring(1,6),
-                                      style: const TextStyle(color: Color.fromARGB(255, 32, 32, 31)),
+                              child: Stack(
+                                children: [
+                                  ColoredBox(
+                                    color: Color.fromARGB(115, 238, 245, 246),
+                                    child: ListTile(
+                                    tileColor: const Color.fromARGB(255, 55, 46, 19),
+                                    
+                                      title: InkWell(
+                                        onTap: () async{
+                                          final oldtime=snapshot.data!.docs[0]['Time'][index].keys.toString().substring(1,6);
+                                      //  controller.check();
+                                      log(oldtime);
+                                        await  controller.selectTime(
+                                              context,
+                                              TimeOfDay(
+                                                  hour: int.tryParse(
+                                                          snapshot.data!.docs[0]['Time'][index].keys.substring(0, 2))
+                                                      as int,
+                                                  minute: int.tryParse(
+                                                        snapshot.data!.docs[0]['Time'][index].keys.substring(3, 5))
+                                                      as int));
+                                                controller.sendDateTimedata( update:  true,oldtime:  oldtime,);
+                                          //  log(int.tryParse(times[index].substring(0,2)).toString());
+                                        },
+                                        child: Text(
+                                          snapshot.data!.docs[0]['Time'][index].keys.toString().substring(1,6),
+                                          style: const TextStyle(color: Color.fromARGB(255, 32, 32, 31)),
+                                        ),
+                                      ),
+                                      
+                                      trailing: 
+                                      
+                                      
+                                     
+                                          Padding(
+                                            padding: const EdgeInsets.only(),
+                                            child: Text('${snapshot.data!.docs[0]['Time'][index][snapshot.data!.docs[0]['Time'][index].keys.toString().substring(1,6)]}'),
+                                          )
+                                    
                                     ),
                                   ),
-                                  trailing: snapshot.data!.docs[0]['Time'][index][timeKey] != null ?
-                                  
-                                  
-                                  ElevatedButton(
-                                      onPressed: () async{
-                                        log("Date >> ${snapshot.data!.docs[0]['Time'][index].keys.toString().substring(1,6)}");
-                                        controller.currentEditingTIme.value=snapshot.data!.docs[0]['Time'][index].keys.toString().substring(1,6);
-                                        log(controller.currentEditingTIme.value.toString());
-                                        log(controller.selectedDAte.value.toString());
-                                        // await Get.find<MovieController>().getdatatoAllMovies();
-                                        Get.to(MovieScreen(theaterId:theaterId));
-                                      },
-                                      child: const Text('Select Movie')):Text('${snapshot.data!.docs[0]['Time'][index][timeKey]}')
-                                
-                                ),
+                                    //  Positioned(
+                                    //   right: ,
+                                    //    child: CircleAvatar(
+                                    //     backgroundColor: Colors.amber,
+                                    //      child: IconButton(onPressed: (){
+                                    //         log("Date >> ${snapshot.data!.docs[0]['Time'][index].keys.toString().substring(1,6)}");
+                                    //         controller.currentEditingTIme.value=snapshot.data!.docs[0]['Time'][index].keys.toString().substring(1,6);
+                                    //         log(controller.currentEditingTIme.value.toString());
+                                    //         log(controller.selectedDAte.value.toString());
+                                    //         // await Get.find<MovieController>().getdatatoAllMovies();
+                                    //         Get.to(MovieScreen(theaterId:theaterId));
+                                    //        }, icon: Icon(Icons.edit)),
+                                    //    ),
+                                    //  )
+                                ],
                               ),
                             ),
                           );

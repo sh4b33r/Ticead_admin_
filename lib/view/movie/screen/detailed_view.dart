@@ -11,9 +11,10 @@ class MovieDetailView extends StatelessWidget {
 
   const MovieDetailView({Key? key, required this.selectedMovie})
       : super(key: key);
-
+     
   @override
   Widget build(BuildContext context) {
+    final tcntrl=Get.put(TImeController());
     return Scaffold(
       appBar:AppBar(backgroundColor: Colors.black,title: Text(selectedMovie.name.toString()),),
       backgroundColor: MycolorTheme.custwhite,
@@ -99,10 +100,15 @@ const SizedBox(height: 40,),
                 children: [
                   ElevatedButton(onPressed: ()async{
 
-await Get.find<TImeController>().movieSending(selectedMovie);
-// (movie: true,movieDetails: selectedMovie);
+// await Get.find<TImeController>().movieSending(selectedMovie);
+            final val= await tcntrl.selectTime(context);
+                          if(val){
+  tcntrl.sendDateTimedata(movieModel: selectedMovie);
 
-                  }, child: const Text('Submit')),
+                          } 
+   
+
+                  }, child: const Text('Add')),
                 ],
               )
         ],

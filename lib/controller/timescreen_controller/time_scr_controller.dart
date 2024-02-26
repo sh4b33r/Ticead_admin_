@@ -167,7 +167,9 @@ class TImeController extends GetxController {
 //   }
 
   Future<void> sendDateTimedata(
-    {bool update = false,
+
+    {MovieModel? movieModel,
+      bool update = false,
     String? oldtime,
     bool movie = false,
     MovieModel? movieDetails}) async {
@@ -183,13 +185,13 @@ class TImeController extends GetxController {
   //  ----->   // Add time in Firestore when there's nothing on the specific date
        await FirebaseFirestore.instance.collection('shows').add({
         'Date': selectedDAte.value,
-        'Time': [{selectedTime.value.toString().substring(10, 15):''}],
+        'Time': [{selectedTime.value.toString().substring(10, 15):movieModel!.name.toString()}],
         'TheatreId': thatreoftimecurrent.value,
         'timestamp': FieldValue.serverTimestamp(),
       });
     } else {
       await fdata.docs.first.reference.update({
-        'Time': FieldValue.arrayUnion([{selectedTime.value.toString().substring(10, 15):''}]),
+        'Time': FieldValue.arrayUnion([{selectedTime.value.toString().substring(10, 15):movieModel!.name}]),
       
             
     

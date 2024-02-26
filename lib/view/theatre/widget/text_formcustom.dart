@@ -247,16 +247,15 @@ Container(
                 //     controllerobj.image);
                 // log('all urls  textformcutom_141>>>>>> $urls');
                 log(controllerobj.cntrlNormal?.text as String);
-                if (controllerobj.image.isEmpty) {
+                if (controllerobj.imageUrls.isEmpty) {
                   Styles().c1sSnackbar(
                       Data: "Can't Leave Image Empty ", green: false);
                 }
  if(isEditing){
 //  Ediitng
  if (controllerobj.formKey.currentState!.validate() &&
-                    controllerobj.image.isNotEmpty) {}
-
-                  await FirebaseService().toeditFromFBase(TheatreModel(theatreAdminId:SharedPref().sharedInstance.toString() ,      name: controllerobj.cntrlName.text,
+                    controllerobj.imageUrls.isNotEmpty) {
+  await FirebaseService().toeditFromFBase(TheatreModel(theatreAdminId:SharedPref().sharedInstance.toString() ,      name: controllerobj.cntrlName.text,
                     description: controllerobj.cntrlDesc.text,
                     image: controllerobj.imageUrls,
                     normal: controllerobj.normal.value,
@@ -271,12 +270,18 @@ Container(
 
   await      Future.delayed(Duration(seconds: 2));
                    Get.back();
+
+
+                    }
+
+                
  }else{
 // ------------------------
   // addding
 // ---------------------------
                 if (controllerobj.formKey.currentState!.validate() &&
-                    controllerobj.image.isNotEmpty) {
+                    controllerobj.imageUrls.isNotEmpty) {
+                      controllerobj.submit.value=CircularProgressIndicator();
                   await FirebaseService.sendDatatoFirebase(TheatreModel(
                     theatreAdminId: SharedPref().sharedInstance.toString(),
                     name: controllerobj.cntrlName.text,
@@ -295,6 +300,7 @@ Container(
                   // updatetheatrewithidstoadmin();
 
                   controllerobj.clearAllThings();
+                  controllerobj.submit.value=Text('Submit');
                 }
                    await      Future.delayed(Duration(seconds: 2));
                    Get.back();
@@ -303,10 +309,12 @@ Container(
  }
                 //  return
               },
-              child: Text(
-                isEditing?'Update': 'Submit',
-                style: MytextTheme.commomText,
-              )),
+              child: controllerobj.submit.value,
+              // child: Text(
+              //   isEditing?'Update': 'Submit',
+              //   style: MytextTheme.commomText,
+              // )
+              ),
         ),
       )
       //   ]);

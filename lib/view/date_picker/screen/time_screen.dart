@@ -1,5 +1,6 @@
 import 'package:admin_ticead/controller/timescreen_controller/time_scr_controller.dart';
 import 'package:admin_ticead/view/date_picker/widget/date_tabbar.dart';
+import 'package:admin_ticead/view/movie/screen/movie_screen.dart';
 import 'package:admin_ticead/view/theme/text_theme/main_texts.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -42,11 +43,13 @@ class DateMainPage extends StatelessWidget {
                  Text('Today',style: MytextTheme.Medium15Text,),
                  ElevatedButton(onPressed: ()async{
                             
-                    final val= await cntrl.selectTime(context);
-                          if(val){
-cntrl.sendDateTimedata();
-                          }  
-                 }, child: Text('Add Timing'))
+  //                   final val= await cntrl.selectTime(context);
+  //                         if(val){
+  // cntrl.sendDateTimedata();
+
+  //                         }  
+  Get.to(MovieScreen(theaterId: theaterId));
+                 }, child: Text('Add Timing & Movie'))
                ],
              ),
            ),
