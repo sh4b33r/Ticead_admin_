@@ -7,7 +7,7 @@ import 'package:admin_ticead/model/movie_model/movie_model.dart';
 import 'package:get/get.dart';
 
 class MovieDetailView extends StatelessWidget {
-  final MovieModel selectedMovie;
+  final dynamic selectedMovie;
 
   const MovieDetailView({Key? key, required this.selectedMovie})
       : super(key: key);

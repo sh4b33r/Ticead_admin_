@@ -255,6 +255,7 @@ Container(
 //  Ediitng
  if (controllerobj.formKey.currentState!.validate() &&
                     controllerobj.imageUrls.isNotEmpty) {
+                         controllerobj.changeSubmitToLoading();
   await FirebaseService().toeditFromFBase(TheatreModel(theatreAdminId:SharedPref().sharedInstance.toString() ,      name: controllerobj.cntrlName.text,
                     description: controllerobj.cntrlDesc.text,
                     image: controllerobj.imageUrls,
@@ -270,7 +271,7 @@ Container(
 
   await      Future.delayed(Duration(seconds: 2));
                    Get.back();
-
+   controllerobj.changeLoadingToSubmit();
 
                     }
 
@@ -281,7 +282,7 @@ Container(
 // ---------------------------
                 if (controllerobj.formKey.currentState!.validate() &&
                     controllerobj.imageUrls.isNotEmpty) {
-                      controllerobj.submit.value=CircularProgressIndicator();
+                      controllerobj.changeSubmitToLoading();
                   await FirebaseService.sendDatatoFirebase(TheatreModel(
                     theatreAdminId: SharedPref().sharedInstance.toString(),
                     name: controllerobj.cntrlName.text,
@@ -300,7 +301,7 @@ Container(
                   // updatetheatrewithidstoadmin();
 
                   controllerobj.clearAllThings();
-                  controllerobj.submit.value=Text('Submit');
+                  controllerobj.changeLoadingToSubmit();
                 }
                    await      Future.delayed(Duration(seconds: 2));
                    Get.back();
@@ -309,7 +310,11 @@ Container(
  }
                 //  return
               },
-              child: controllerobj.submit.value,
+              child: 
+              GetBuilder<TheatreController>( 
+                builder: (controller) {
+                return controller.submit;
+              },)
               // child: Text(
               //   isEditing?'Update': 'Submit',
               //   style: MytextTheme.commomText,

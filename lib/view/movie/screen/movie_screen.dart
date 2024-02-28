@@ -17,7 +17,7 @@ class MovieScreen extends StatelessWidget {
     // Timer? _debounce;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Select Movie',style: MytextTheme.headingText,),
+        title: Text('Select Movie',style: MytextTheme.headingwhtiteText,),
         leading: const Icon(Icons.arrow_back,color: MycolorTheme.custwhite,),
         backgroundColor: const Color.fromARGB(255, 0, 0, 0),
       ),
@@ -48,6 +48,7 @@ class MovieScreen extends StatelessWidget {
                                   onChanged: (value) {
                                     // cntrl.getMoviesStream(contollerval: true,name: value);
                                     cntrl.searchMovies(value);
+                                  // cntrl.searchval.value=value;
                                     if (value.isEmpty) {
 
                                  cntrl.fetchAlltomovies();
@@ -60,8 +61,8 @@ class MovieScreen extends StatelessWidget {
                                           sufix: InkWell(
                                               onTap: () async{
                                                 // await cntrl.searchEmptyData();
-                                                cntrl.moviesearchController
-                                                    .clear();
+                                                // cntrl.moviesearchController
+                                                //     .clear();
                                              
                                               },
                                               child: const SizedBox(child: Icon(Icons.close)))),

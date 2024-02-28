@@ -66,6 +66,7 @@ Future<String> addUser(String? email, String? name) async {
   } else {
     String existingUserId = fdata.docs.first.id;
     return existingUserId;
+    
   }
 }
 

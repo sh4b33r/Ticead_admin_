@@ -1,9 +1,13 @@
+import 'package:admin_ticead/controller/movie_controller/movie_controller.dart';
 import 'package:admin_ticead/controller/timescreen_controller/time_scr_controller.dart';
 import 'package:admin_ticead/view/date_picker/widget/date_tabbar.dart';
 import 'package:admin_ticead/view/movie/screen/movie_screen.dart';
 import 'package:admin_ticead/view/theme/text_theme/main_texts.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get.dart';
+
+import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
 
 
@@ -14,6 +18,7 @@ class DateMainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
    final cntrl=Get.put(TImeController());
+   final mvcontroller=Get.put(MovieController());
     cntrl.thatreoftimecurrent.value=theaterId;
     return  Scaffold(
  
@@ -46,7 +51,7 @@ class DateMainPage extends StatelessWidget {
   //                   final val= await cntrl.selectTime(context);
   //                         if(val){
   // cntrl.sendDateTimedata();
-
+   await mvcontroller.fetchAlltomovies();
   //                         }  
   Get.to(MovieScreen(theaterId: theaterId));
                  }, child: Text('Add Timing & Movie'))

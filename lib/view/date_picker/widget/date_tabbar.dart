@@ -20,7 +20,10 @@ class DateWidget extends StatelessWidget {
       color: Colors.black,
       margin: const EdgeInsets.only(top: 10),
       child: GetX<TImeController>(
+        
         builder: (controller) {
+       controller.thatreoftimecurrent.value=theaterId;                  //  ========================
+          log('>>>>>>>>>>>>>>>>>$theaterId');
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -55,7 +58,7 @@ class DateWidget extends StatelessWidget {
                 child: StreamBuilder(
                   stream: FirebaseFirestore.instance
           .collection('shows')
-          .where('Date', isEqualTo: controller.selectedDAte.value)
+          .where('TheatreId', isEqualTo: theaterId).where('Date', isEqualTo: controller.selectedDAte.value )
           .snapshots(),
       //              FirebaseFirestore.instance
       // .collection('theaters')

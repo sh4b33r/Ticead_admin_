@@ -1,22 +1,22 @@
 
 
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:admin_ticead/model/movie_model/movie_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/_http/_stub/_file_decoder_stub.dart';
 
 class MovieController extends GetxController {
- 
+  
  @override
   void onInit() {
     super.onInit();
    fetchAlltomovies();
   }
 
-
+ RxString searchval=''.obs;
   TextEditingController moviesearchController = TextEditingController();
   RxList<MovieModel> allMovies = <MovieModel>[].obs;
   RxList<MovieModel> searchListener = <MovieModel>[].obs;
@@ -30,7 +30,9 @@ class MovieController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
 
+
 fetchAlltomovies()async{
+  log('>>>>>>>>>>>>>>>>   entererd into funtion');
   QuerySnapshot snapDatas=await _firestore.collection('Movie').get();
 
   allMovies.value=snapDatas.docs.map((sData) =>MovieModel(
@@ -43,7 +45,9 @@ fetchAlltomovies()async{
               language: sData['language']
             ))
         .toList();
-         _movieBrController.add(allMovies.toList());
+        //  log(allMovies.toString());
+        _movieBrController.add(allMovies.toList());
+        
 }
 
 
